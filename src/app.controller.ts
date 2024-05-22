@@ -1,14 +1,14 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-// import { ReportType } from 'sr/data';
+// eslint-disable-next-line prettier/prettier
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { data, ReportType } from './data';
+import { v4 as uuid } from 'uuid';
 
 @Controller('report/:type')
 export class AppController {
   @Get()
   getAllIncomeReports(@Param('type') type: string) {
     // console.log(type);
-    // eslint-disable-next-line prettier/prettier
-    const reportType = 
+    const reportType =
       type === 'income' ? ReportType.INCOME : ReportType.EXPENSE;
     return data.report.filter((report) => report.type === reportType);
   }
@@ -24,8 +24,20 @@ export class AppController {
   }
 
   @Post()
-  createReport() {
-    return 'Created Report';
+  createReport(
+    @Body() { amount, source }: { amount: number; source: string },
+    @Param('type') type: string,
+  ) {
+    const newReport = {
+      id: uuid(),
+      source,
+      amount,
+      created_at: new Date(),
+      updated_at: new Date(),
+      type: type === 'income' ? ReportType.INCOME : ReportType.EXPENSE,
+    };
+    data.report.push(newReport);
+    return newReport;
   }
 
   @Put(':id')
