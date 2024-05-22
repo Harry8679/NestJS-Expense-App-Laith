@@ -14,8 +14,13 @@ export class AppController {
   }
 
   @Get(':id')
-  getIncomeReportById() {
-    return {};
+  getReportById(@Param('type') type: string, @Param('id') id: string) {
+    // console.log({ type, id });
+    const reportType =
+      type === 'income' ? ReportType.INCOME : ReportType.EXPENSE;
+    return data.report
+      .filter((report) => report.type === reportType)
+      .find((report) => report.id === id);
   }
 
   @Post()
