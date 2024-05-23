@@ -30,4 +30,26 @@ export class AppService {
     };
     data.report.push(newReport);
   }
+
+  updateReport(type: ReportType, id, body: Report) {
+    const reportToUpdate = data.report
+      .filter((report) => report.type === type)
+      .find((report) => report.id === id);
+
+    if (!reportToUpdate) return 'No report registred !';
+
+    const reportIndex = data.report.findIndex(
+      (report) => report.id === reportToUpdate.id,
+    );
+
+    console.log(reportIndex);
+
+    data.report[reportIndex] = {
+      ...data.report[reportIndex],
+      ...body,
+      updated_at: new Date(),
+    };
+
+    return data.report[reportIndex];
+  }
 }

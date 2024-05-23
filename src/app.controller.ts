@@ -1,7 +1,7 @@
 // eslint-disable-next-line prettier/prettier
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { data, ReportType } from './data';
-import { v4 as uuid } from 'uuid';
+// import { v4 as uuid } from 'uuid';
 import { AppService } from './app.service';
 
 @Controller('report/:type')
@@ -41,24 +41,8 @@ export class AppController {
   ) {
     const reportType =
       type === 'income' ? ReportType.INCOME : ReportType.EXPENSE;
-    const reportToUpdate = data.report
-      .filter((report) => report.type === reportType)
-      .find((report) => report.id === id);
 
-    if (!reportToUpdate) return 'No report registred !';
-
-    const reportIndex = data.report.findIndex(
-      (report) => report.id === reportToUpdate.id,
-    );
-
-    console.log(reportIndex);
-
-    data.report[reportIndex] = {
-      ...data.report[reportIndex],
-      ...body,
-    };
-
-    return data.report[reportIndex];
+    return this.appService.updateReport(reportType, id, body);
   }
 
   @Delete(':id')
