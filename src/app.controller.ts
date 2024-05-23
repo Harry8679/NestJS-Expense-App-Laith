@@ -52,11 +52,13 @@ export class AppController {
       .filter((report) => report.type === reportType)
       .find((report) => report.id === id);
 
-    if (!reportToUpdate) return;
+    if (!reportToUpdate) return 'No report registred !';
 
     const reportIndex = data.report.findIndex(
       (report) => report.id === reportToUpdate.id,
     );
+
+    console.log(reportIndex);
 
     data.report[reportIndex] = {
       ...data.report[reportIndex],
@@ -67,7 +69,13 @@ export class AppController {
   }
 
   @Delete(':id')
-  deleteReport() {
-    return 'Deleted Report';
+  deleteReport(@Param('id') id: string) {
+    const reportIndex = data.report.findIndex((report) => report.id === id);
+
+    if (reportIndex === -1) return;
+
+    data.report.splice(reportIndex, 1);
+
+    return;
   }
 }
